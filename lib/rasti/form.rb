@@ -6,10 +6,7 @@ module Rasti
 
     extend MultiRequire
 
-    require_relative 'form/version'
-    require_relative 'form/castable'
-    require_relative 'form/formatable'
-    require_relative 'form/errors'
+    require_relative_pattern 'form/*'
     require_relative_pattern 'form/types/*'
 
     class << self
