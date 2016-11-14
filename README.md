@@ -33,8 +33,6 @@ T = Rasti::Form::Types
 ### Type casting
 
 ```ruby
-T = Rasti::Types
-
 T::Integer.cast '10'   # => 10
 T::Integer.cast '10.5' # => 10
 T::Integer.cast 'text' # => Rasti::Types::CastError: Invalid cast: 'text' -> Rasti::Types::Integer
