@@ -18,24 +18,32 @@ describe Rasti::Form do
       point = point_class.new x: 1, y: 2
       point.x.must_equal 1
       point.y.must_equal 2
+      point.assigned?(:x).must_equal true
+      point.assigned?(:y).must_equal true
     end
 
     it 'Some attributes' do
       point = point_class.new x: 1
       point.x.must_equal 1
       point.y.must_be_nil
+      point.assigned?(:x).must_equal true
+      point.assigned?(:y).must_equal false
     end
 
     it 'Whitout attributes' do
       point = point_class.new
       point.x.must_be_nil
       point.y.must_be_nil
+      point.assigned?(:x).must_equal false
+      point.assigned?(:y).must_equal false
     end
 
     it 'Extra attributes' do
       point = point_class.new z: 3
       point.x.must_be_nil
       point.y.must_be_nil
+      point.assigned?(:x).must_equal false
+      point.assigned?(:y).must_equal false
       proc { point.z }.must_raise NoMethodError
       point.attributes.must_be_empty
     end

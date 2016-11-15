@@ -61,6 +61,10 @@ module Rasti
     end
     alias_method :to_h, :attributes
 
+    def assigned?(name)
+      assigned_attribute_names.include? name
+    end
+
     private
 
     def assign_attributes(attrs={})
