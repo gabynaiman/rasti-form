@@ -56,13 +56,25 @@ module Rasti
 
     def attributes
       assigned_attribute_names.each_with_object({}) do |name, hash|
-        hash[name] = read_attribute name
+        hash[name] = serialize(read_attribute(name))
       end
     end
     alias_method :to_h, :attributes
 
     def assigned?(name)
       assigned_attribute_names.include? name
+    end
+
+    def ==(other)
+      other.kind_of?(self.class) && other.attributes == attributes
+    end
+
+    def eql?(other)
+      other.instance_of?(self.class) && other.attributes == attributes
+    end
+
+    def hash
+      [self.class, attributes].hash
     end
 
     private
@@ -94,6 +106,16 @@ module Rasti
 
     def assigned_attribute_names
       self.class.attribute_names & instance_variables.map { |v| v.to_s[1..-1].to_sym }
+    end
+
+    def serialize(value)
+      if value.kind_of? Array
+        value.map { |v| serialize v }
+      elsif value.kind_of? Form
+        value.attributes
+      else
+        value
+      end
     end
 
     def read_attribute(name)

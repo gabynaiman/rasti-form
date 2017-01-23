@@ -232,9 +232,68 @@ describe Rasti::Form do
 
   end
 
-  it 'to_h' do
-    point = point_class.new x: '1', y: '2'
-    point.to_h.must_equal x: 1, y: 2
+  describe 'Comparable' do
+
+    it 'Equivalency (==)' do
+      point_1 = point_class.new x: 1, y: 2
+      point_2 = point_subclass.new x: 1, y: 2
+      point_3 = point_class.new x: 2, y: 1
+
+      assert point_1 == point_2
+      refute point_1 == point_3
+    end
+    
+    it 'Equality (eql?)' do
+      point_1 = point_class.new x: 1, y: 2
+      point_2 = point_class.new x: 1, y: 2
+      point_3 = point_subclass.new x: 1, y: 2
+      point_4 = point_class.new x: 2, y: 1
+
+      assert point_1.eql?(point_2)
+      refute point_1.eql?(point_3)
+      refute point_1.eql?(point_4)
+    end
+
+    it 'hash' do
+      point_1 = point_class.new x: 1, y: 2
+      point_2 = point_class.new x: 1, y: 2
+      point_3 = point_subclass.new x: 1, y: 2
+      point_4 = point_class.new x: 2, y: 1
+
+      point_1.hash.must_equal point_2.hash
+      point_1.hash.wont_equal point_3.hash
+      point_1.hash.wont_equal point_4.hash
+    end
+
+  end
+
+  it 'Attributes (to_h)' do
+    t = Rasti::Form::Types
+    address_class = Rasti::Form[street: t::String, number: t::Integer]
+    contact_class = Rasti::Form[
+      name: t::String, 
+      age: t::Integer, 
+      phones: t::Hash[t::Symbol, t::Integer], 
+      addresses: t::Array[t::Form[address_class]]
+    ]
+
+    attributes = {
+      name: 'John', 
+      age: 24, 
+      phones: {
+        office: 1234567890, 
+        house:  456456456
+      },
+      addresses: [
+        {street: 'Lexington Avenue', number: 123},
+        {street: 'Park Avenue',      number: 456}
+      ]
+    }
+
+    contact = contact_class.new attributes
+
+    contact.attributes.must_equal attributes
+    contact.attributes.must_equal contact.to_h
   end
 
   it 'to_s' do
