@@ -4,7 +4,7 @@ describe Rasti::Form::Types::Form do
 
   form = Rasti::Form[x: Rasti::Form::Types::Integer, y: Rasti::Form::Types::Integer]
 
-  hash = {x: '1', y: '2', z: '3'}
+  hash = {x: '1', y: '2'}
 
   it 'Class' do
     result = Rasti::Form::Types::Form[form].cast hash

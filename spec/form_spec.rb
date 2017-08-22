@@ -38,14 +38,9 @@ describe Rasti::Form do
       point.assigned?(:y).must_equal false
     end
 
-    it 'Extra attributes' do
-      point = point_class.new z: 3
-      point.x.must_be_nil
-      point.y.must_be_nil
-      point.assigned?(:x).must_equal false
-      point.assigned?(:y).must_equal false
-      proc { point.z }.must_raise NoMethodError
-      point.attributes.must_be_empty
+    it 'Invalid attributes' do
+      error = proc { point_class.new z: 3 }.must_raise Rasti::Form::ValidationError
+      error.message.must_equal 'Validation error: {"z":["Unexpected attribute"]}'
     end
 
     describe 'Casting' do
