@@ -9,6 +9,8 @@ module Rasti
     require_relative_pattern 'form/*'
     require_relative_pattern 'form/types/*'
 
+    include Validable
+
     class << self
 
       def [](attributes)
@@ -85,7 +87,7 @@ module Rasti
           if self.class.attributes.key? name
             write_attribute name, value
           else
-            errors[name] << 'Unexpected attribute'
+            errors[name] << 'unexpected attribute'
           end
         
         rescue CastError => error
@@ -135,25 +137,6 @@ module Rasti
       attribute.to_s.split('.').inject(self) do |target, attr_name|
         target.nil? ? nil : target.public_send(attr_name)
       end
-    end
-
-    def validate!
-      validate
-      raise ValidationError.new(errors) unless errors.empty?
-    end
-
-    def validate
-    end
-
-    def errors
-      @errors ||= Hash.new { |hash, key| hash[key] = [] }
-    end
-
-    def assert(key, condition, message)
-      return true if condition
-      
-      errors[key] << message
-      false
     end
 
     def assert_present(attribute)

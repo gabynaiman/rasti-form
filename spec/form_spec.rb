@@ -40,7 +40,7 @@ describe Rasti::Form do
 
     it 'Invalid attributes' do
       error = proc { point_class.new z: 3 }.must_raise Rasti::Form::ValidationError
-      error.message.must_equal 'Validation error: {"z":["Unexpected attribute"]}'
+      error.message.must_equal 'Validation error: {"z":["unexpected attribute"]}'
     end
 
     describe 'Casting' do
