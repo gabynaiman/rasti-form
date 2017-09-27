@@ -40,7 +40,7 @@ describe Rasti::Form do
 
     it 'Invalid attributes' do
       error = proc { point_class.new z: 3 }.must_raise Rasti::Form::ValidationError
-      error.message.must_equal 'Validation error: {"z":["unexpected attribute"]}'
+      error.message.must_equal 'Validation error: #<Rasti::Form[]> {"z":["unexpected attribute"]}'
     end
 
     describe 'Casting' do
@@ -86,7 +86,7 @@ describe Rasti::Form do
         end
 
         error = proc { form.new boolean: 'x', number: 'y' }.must_raise Rasti::Form::ValidationError
-        error.message.must_equal 'Validation error: {"boolean":["Invalid cast: \'x\' -> Rasti::Form::Types::Boolean"],"number":["Invalid cast: \'y\' -> Rasti::Form::Types::Integer"]}'
+        error.message.must_equal 'Validation error: #<Rasti::Form[]> {"boolean":["Invalid cast: \'x\' -> Rasti::Form::Types::Boolean"],"number":["Invalid cast: \'y\' -> Rasti::Form::Types::Integer"]}'
       end
 
       it 'Invalid nested attributes' do
@@ -95,7 +95,7 @@ describe Rasti::Form do
         end
 
         error = proc { form.new range: {min: 'x', max: 'y'} }.must_raise Rasti::Form::ValidationError
-        error.message.must_equal "Validation error: {\"range.min\":[\"Invalid cast: 'x' -> Rasti::Form::Types::Integer\"],\"range.max\":[\"Invalid cast: 'y' -> Rasti::Form::Types::Integer\"]}"
+        error.message.must_equal "Validation error: #<Rasti::Form[]> {\"range.min\":[\"Invalid cast: 'x' -> Rasti::Form::Types::Integer\"],\"range.max\":[\"Invalid cast: 'y' -> Rasti::Form::Types::Integer\"]}"
       end
 
       it 'Invalid form attributes' do
@@ -109,7 +109,7 @@ describe Rasti::Form do
         end
 
         error = proc { form.new range: {min: 'x', max: 'y'} }.must_raise Rasti::Form::ValidationError
-        error.message.must_equal "Validation error: {\"range.min\":[\"Invalid cast: 'x' -> Rasti::Form::Types::Integer\"],\"range.max\":[\"Invalid cast: 'y' -> Rasti::Form::Types::Integer\"]}"
+        error.message.must_equal "Validation error: #<Rasti::Form[]> {\"range.min\":[\"Invalid cast: 'x' -> Rasti::Form::Types::Integer\"],\"range.max\":[\"Invalid cast: 'y' -> Rasti::Form::Types::Integer\"]}"
       end
 
     end
@@ -151,7 +151,7 @@ describe Rasti::Form do
       end
 
       error = proc { form.new }.must_raise Rasti::Form::ValidationError
-      error.message.must_equal 'Validation error: {"text":["not present"]}'
+      error.message.must_equal 'Validation error: #<Rasti::Form[]> {"text":["not present"]}'
     end
 
     it 'Not empty string' do
@@ -164,7 +164,7 @@ describe Rasti::Form do
       end
 
       error = proc { form.new text: '  ' }.must_raise Rasti::Form::ValidationError
-      error.message.must_equal 'Validation error: {"text":["is empty"]}'
+      error.message.must_equal 'Validation error: #<Rasti::Form[text: "  "]> {"text":["is empty"]}'
     end
 
     it 'Not empty array' do
@@ -177,7 +177,7 @@ describe Rasti::Form do
       end
 
       error = proc { form.new array: [] }.must_raise Rasti::Form::ValidationError
-      error.message.must_equal 'Validation error: {"array":["is empty"]}'
+      error.message.must_equal 'Validation error: #<Rasti::Form[array: []]> {"array":["is empty"]}'
     end
 
     it 'Included in values list' do
@@ -190,7 +190,7 @@ describe Rasti::Form do
       end
 
       error = proc { form.new text: 'xyz' }.must_raise Rasti::Form::ValidationError
-      error.message.must_equal 'Validation error: {"text":["not included in \'value_1\', \'value_2\'"]}'
+      error.message.must_equal 'Validation error: #<Rasti::Form[text: "xyz"]> {"text":["not included in \'value_1\', \'value_2\'"]}'
     end
 
     it 'Nested form' do
@@ -204,7 +204,7 @@ describe Rasti::Form do
       end
 
       error = proc { form.new }.must_raise Rasti::Form::ValidationError
-      error.message.must_equal 'Validation error: {"range.min":["not present"],"range.max":["not present"]}'
+      error.message.must_equal 'Validation error: #<Rasti::Form[]> {"range.min":["not present"],"range.max":["not present"]}'
     end
 
     it 'Nested validation' do
@@ -222,7 +222,7 @@ describe Rasti::Form do
       end 
 
       error = proc { form.new range: {min: 2, max: 1} }.must_raise Rasti::Form::ValidationError
-      error.message.must_equal 'Validation error: {"range.min":["Min must be less than Max"]}'
+      error.message.must_equal 'Validation error: #<Rasti::Form[]> {"range.min":["Min must be less than Max"]}'
     end
 
   end

@@ -25,14 +25,15 @@ module Rasti
 
     class ValidationError < StandardError
 
-      attr_reader :errors
+      attr_reader :scope, :errors
       
-      def initialize(errors)
+      def initialize(scope, errors)
+        @scope = scope
         @errors = errors
       end
 
       def message
-        "Validation error: #{JSON.dump(errors)}"
+        "Validation error: #{scope} #{JSON.dump(errors)}"
       end
 
     end
