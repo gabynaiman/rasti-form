@@ -91,11 +91,11 @@ form.to   # => 2016-10-28 00:00:00 -0300
 - Boolean
 - Enum
 - Float
+- Form
 - Hash
 - Integer
 - Regexp
 - String
-- Struct
 - Symbol
 - Time
 - UUID
