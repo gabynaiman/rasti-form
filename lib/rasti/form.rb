@@ -83,19 +83,20 @@ module Rasti
 
     def assign_attributes(attrs={})
       attrs.each do |name, value|
+        attr_name = name.to_sym
         begin
-          if self.class.attributes.key? name
-            write_attribute name, value
+          if self.class.attributes.key? attr_name
+            write_attribute attr_name, value
           else
-            errors[name] << 'unexpected attribute'
+            errors[attr_name] << 'unexpected attribute'
           end
         
         rescue CastError => error
-          errors[name] << error.message
+          errors[attr_name] << error.message
         
         rescue ValidationError => error
           error.errors.each do |inner_name, inner_errors| 
-            inner_errors.each { |message| errors["#{name}.#{inner_name}"] << message }
+            inner_errors.each { |message| errors["#{attr_name}.#{inner_name}"] << message }
           end
         end        
       end
