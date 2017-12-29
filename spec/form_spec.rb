@@ -262,33 +262,61 @@ describe Rasti::Form do
 
   end
 
-  it 'Attributes (to_h)' do
-    t = Rasti::Form::Types
-    address_class = Rasti::Form[street: t::String, number: t::Integer]
-    contact_class = Rasti::Form[
-      name: t::String, 
-      age: t::Integer, 
-      phones: t::Hash[t::Symbol, t::Integer], 
-      addresses: t::Array[t::Form[address_class]]
-    ]
+  describe 'Attributes' do
 
-    attributes = {
-      name: 'John', 
-      age: 24, 
-      phones: {
-        office: 1234567890, 
-        house:  456456456
-      },
-      addresses: [
-        {street: 'Lexington Avenue', number: 123},
-        {street: 'Park Avenue',      number: 456}
+    let :address_class do
+      Rasti::Form[
+        street: Rasti::Form::Types::String, 
+        number: Rasti::Form::Types::Integer
       ]
-    }
+    end
 
-    contact = contact_class.new attributes
+    let :contact_class do
+      Rasti::Form[
+        name: Rasti::Form::Types::String, 
+        age: Rasti::Form::Types::Integer, 
+        phones: Rasti::Form::Types::Hash[Rasti::Form::Types::Symbol, Rasti::Form::Types::Integer], 
+        addresses: Rasti::Form::Types::Array[Rasti::Form::Types::Form[address_class]],
+        hobbies: Rasti::Form::Types::Array[Rasti::Form::Types::String]
+      ]
+    end
 
-    contact.attributes.must_equal attributes
-    contact.attributes.must_equal contact.to_h
+    let :attributes do
+      {
+        name: 'John', 
+        age: 24, 
+        phones: {
+          office: 1234567890, 
+          house:  456456456
+        },
+        addresses: [
+          {street: 'Lexington Avenue', number: 123},
+          {street: 'Park Avenue',      number: 456}
+        ]
+      }
+    end
+
+    it 'All (to_h)' do
+      contact = contact_class.new attributes
+
+      contact.attributes.must_equal attributes
+      contact.to_h.must_equal attributes
+    end
+
+    it 'Only' do
+      contact = contact_class.new attributes
+
+      contact.attributes(only: [:name, :age]).must_equal name: attributes[:name],
+                                                         age: attributes[:age]
+    end
+
+    it 'Except' do
+      contact = contact_class.new attributes
+
+      contact.attributes(except: [:age, :addresses]).must_equal name: attributes[:name],
+                                                                phones: attributes[:phones]
+    end
+
   end
 
   it 'to_s' do

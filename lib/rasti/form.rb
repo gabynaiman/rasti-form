@@ -56,12 +56,16 @@ module Rasti
     end
     alias_method :inspect, :to_s
 
-    def attributes
-      assigned_attribute_names.each_with_object({}) do |name, hash|
+    def attributes(options={})
+      attributes_filter = {only: assigned_attribute_names, except: []}.merge(options)
+      (attributes_filter[:only] - attributes_filter[:except]).each_with_object({}) do |name, hash|
         hash[name] = serialize(read_attribute(name))
       end
     end
-    alias_method :to_h, :attributes
+    
+    def to_h
+      attributes
+    end
 
     def assigned?(name)
       assigned_attribute_names.include? name
@@ -112,7 +116,7 @@ module Rasti
     end
 
     def assigned_attribute_names
-      self.class.attribute_names & instance_variables.map { |v| v.to_s[1..-1].to_sym }
+      @assigned_attribute_names ||= self.class.attribute_names & instance_variables.map { |v| v.to_s[1..-1].to_sym }
     end
 
     def serialize(value)
