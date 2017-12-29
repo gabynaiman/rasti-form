@@ -116,7 +116,7 @@ module Rasti
     end
 
     def assigned_attribute_names
-      @assigned_attribute_names ||= self.class.attribute_names & instance_variables.map { |v| v.to_s[1..-1].to_sym }
+      self.class.attribute_names & instance_variables.map { |v| v.to_s[1..-1].to_sym }
     end
 
     def serialize(value)
