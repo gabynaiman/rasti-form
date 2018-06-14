@@ -23,6 +23,26 @@ module Rasti
     end
 
 
+    class MultiCastError < StandardError
+
+      attr_reader :type, :value, :errors
+      
+      def initialize(type, value, errors)
+        @type = type
+        @value = value
+        @errors = errors
+      end
+
+      def message
+        "Invalid cast: #{display_value} -> #{type} - #{JSON.dump(errors)}"
+      end
+
+      def display_value
+        value.is_a?(::String) ? "'#{value}'" : value.inspect
+      end
+
+    end
+
     class ValidationError < StandardError
 
       attr_reader :scope, :errors

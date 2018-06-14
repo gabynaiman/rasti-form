@@ -27,7 +27,25 @@ module Rasti
         end
 
         def transform(value)
-          value.map { |e| type.cast e }
+          result = []
+          errors = {}
+
+          value.each_with_index do |e,i|
+            index = i + 1
+            begin
+              result << type.cast(e)
+            rescue ValidationError => error
+              error.errors.each do |k,v|
+                errors["#{index}.#{k}"] = v
+              end
+            rescue => error
+              errors[index] = [error.message]
+            end
+          end
+
+          raise MultiCastError.new(self, value, errors) unless errors.empty?
+
+          result
         end
 
       end

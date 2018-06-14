@@ -98,7 +98,7 @@ module Rasti
         rescue CastError => error
           errors[attr_name] << error.message
         
-        rescue ValidationError => error
+        rescue MultiCastError, ValidationError => error
           error.errors.each do |inner_name, inner_errors| 
             inner_errors.each { |message| errors["#{attr_name}.#{inner_name}"] << message }
           end
