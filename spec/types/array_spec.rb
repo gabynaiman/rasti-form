@@ -28,7 +28,6 @@ describe Rasti::Form::Types::Array do
       error.errors.must_equal 3 => ["Invalid cast: 'a' -> Rasti::Form::Types::Integer"], 
                               5 => ["Invalid cast: 'c' -> Rasti::Form::Types::Integer"],
                               7 => ["Invalid cast: nil -> Rasti::Form::Types::Integer"]
-      error.display_value.must_equal "[1, 2, \"a\", 3, \"c\", 4, nil]"
       error.message.must_equal "Invalid cast: [1, 2, \"a\", 3, \"c\", 4, nil] -> Rasti::Form::Types::Array[Rasti::Form::Types::Integer] - {\"3\":[\"Invalid cast: 'a' -> Rasti::Form::Types::Integer\"],\"5\":[\"Invalid cast: 'c' -> Rasti::Form::Types::Integer\"],\"7\":[\"Invalid cast: nil -> Rasti::Form::Types::Integer\"]}"
     end
 
@@ -37,7 +36,7 @@ describe Rasti::Form::Types::Array do
       form_class = Rasti::Form[points: Rasti::Form::Types::Array[inner_form_class]]
 
       error = proc do
-        form = form_class.new points: [
+        form_class.new points: [
           {x: 1, y: 2},
           {x: 'a', y: 2},
           {x: 1, y: 'b'},
