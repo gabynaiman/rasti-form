@@ -195,16 +195,19 @@ describe Rasti::Form do
 
     it 'Time range' do
       form = build_form do
-        attribute :from, Rasti::Form::Types::Time['%Y-%m-%d %H:%M:%S%Z']
-        attribute :to,   Rasti::Form::Types::Time['%Y-%m-%d %H:%M:%S%Z']
+        attribute :from, Rasti::Form::Types::Time['%Y-%m-%d %H:%M:%S %Z']
+        attribute :to,   Rasti::Form::Types::Time['%Y-%m-%d %H:%M:%S %Z']
 
         def validate
           assert_time_range :from, :to
         end
       end
 
-      error = proc { form.new from: '2018-01-01 15:30:00-0600', to: '2018-01-01 03:10:00-0600' }.must_raise Rasti::Form::ValidationError
-      error.message.must_equal 'Validation error: #<Rasti::Form[from: 2018-01-01 15:30:00 -0600, to: 2018-01-01 03:10:00 -0600]> {"from":["invalid time range"]}'
+      from = '2018-01-01 15:30:00 -0600'
+      to = '2018-01-01 03:10:00 -0600'
+
+      error = proc { form.new from: from, to: to }.must_raise Rasti::Form::ValidationError
+      error.message.must_equal "Validation error: #<Rasti::Form[from: #{from}, to: #{to}]> {\"from\":[\"invalid time range\"]}"
     end
 
     it 'Nested form' do
