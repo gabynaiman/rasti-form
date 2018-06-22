@@ -155,6 +155,10 @@ module Rasti
       end
     end
 
+    def assert_time_range(attribute_from, attribute_to)
+       assert attribute_from, public_send(attribute_from) <= public_send(attribute_to), 'invalid time range'
+    end
+
     def assert_included_in(attribute, set)
       if assert_present attribute
         assert attribute, set.include?(fetch(attribute)), "not included in #{set.map { |e| e.is_a?(::String) ? "'#{e}'" : e.inspect }.join(', ')}"
