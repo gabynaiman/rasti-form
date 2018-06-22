@@ -203,8 +203,8 @@ describe Rasti::Form do
         end
       end
 
-      from = '2018-01-01 15:30:00 -0600'
-      to = '2018-01-01 03:10:00 -0600'
+      from = '2018-01-01 15:30:00 +0000'
+      to = '2018-01-01 03:10:00 +0000'
 
       error = proc { form.new from: from, to: to }.must_raise Rasti::Form::ValidationError
       error.message.must_equal "Validation error: #<Rasti::Form[from: #{from}, to: #{to}]> {\"from\":[\"invalid time range\"]}"
