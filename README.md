@@ -94,6 +94,7 @@ form.to   # => 2016-10-28 00:00:00 -0300
 - Form
 - Hash
 - Integer
+- IO
 - Regexp
 - String
 - Symbol
