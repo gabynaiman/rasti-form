@@ -4,7 +4,7 @@ describe Rasti::Form::Types::Regexp do
 
   ['[a-z]', /[a-z]/].each do |value|
     it "#{value.inspect} -> #{Regexp.new(value).inspect}" do
-      Rasti::Form::Types::Regexp.cast(value).must_equal Regexp.new(value)
+      Rasti::Form::Types::Regexp.cast(value).must_equal Regexp.new(value).source
     end
   end
 
