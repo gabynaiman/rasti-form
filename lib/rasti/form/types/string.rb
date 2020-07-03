@@ -26,7 +26,7 @@ module Rasti
           end
 
           def valid_format?(value)
-            format.nil? || value.to_s.match?(format)
+            format.nil? || !value.to_s.match(format).nil?
           end
 
           def transform(value)
