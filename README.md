@@ -4,7 +4,6 @@
 [![Build Status](https://travis-ci.org/gabynaiman/rasti-form.svg?branch=master)](https://travis-ci.org/gabynaiman/rasti-form)
 [![Coverage Status](https://coveralls.io/repos/github/gabynaiman/rasti-form/badge.svg?branch=master)](https://coveralls.io/github/gabynaiman/rasti-form?branch=master)
 [![Code Climate](https://codeclimate.com/github/gabynaiman/rasti-form.svg)](https://codeclimate.com/github/gabynaiman/rasti-form)
-[![Dependency Status](https://gemnasium.com/gabynaiman/rasti-form.svg)](https://gemnasium.com/gabynaiman/rasti-form)
 
 Forms validations and type casting
 
