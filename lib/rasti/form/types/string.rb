@@ -2,21 +2,31 @@ module Rasti
   class Form
     module Types
       class String
-
-        include Formatable
-
         class << self
 
           include Castable
 
           def [](format)
-            new format
+            Class.new(self) do
+              @format = format.is_a?(::String) ? ::Regexp.new(format) : format
+            end
           end
+
+          def to_s
+            name || "#{superclass.name}[#{format.inspect}]"
+          end
+          alias_method :inspect, :to_s
 
           private
 
+          attr_reader :format
+
           def valid?(value)
-            !value.nil? && value.respond_to?(:to_s)
+            !value.nil? && value.respond_to?(:to_s) && valid_format?(value)
+          end
+
+          def valid_format?(value)
+            format.nil? || value.to_s.match?(format)
           end
 
           def transform(value)
@@ -24,20 +34,6 @@ module Rasti
           end
 
         end
-
-        def to_s
-          "#{self.class}[#{format.inspect}]"
-        end
-        alias_method :inspect, :to_s
-
-        private
-        
-        attr_reader :format
-
-        def initialize(format)
-          @format = format.is_a?(String) ? ::Regexp.new(format) : format
-        end
-
       end
     end
   end

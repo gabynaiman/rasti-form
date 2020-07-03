@@ -6,7 +6,7 @@ describe Rasti::Form::Types::String, 'Formatted' do
 
   ['user@mail.com'.to_sym, 'user.name-123@mail-test.com.ar'].each do |value|
     it "#{value.inspect} -> #{value.to_s}" do
-      Rasti::Form::Types::String[email_regexp].cast(value).must_equal value
+      Rasti::Form::Types::String[email_regexp].cast(value).must_equal value.to_s
     end
   end
 
