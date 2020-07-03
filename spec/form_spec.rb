@@ -8,7 +8,7 @@ describe Rasti::Form do
   
   def build_form(&block)
     Class.new(Rasti::Form) do
-      class_eval &block
+      class_eval(&block)
     end
   end
 
@@ -203,10 +203,10 @@ describe Rasti::Form do
         end
       end
 
-      from = '2018-01-01 15:30:00 +0000'
-      to = '2018-01-01 03:10:00 +0000'
+      from = Time.parse '2018-01-01 15:30:00'
+      to = Time.parse '2018-01-01 03:10:00'
 
-      error = proc { form.new from: from, to: to }.must_raise Rasti::Form::ValidationError
+      error = proc { form.new from: from.to_s, to: to.to_s }.must_raise Rasti::Form::ValidationError
       error.message.must_equal "Validation error: #<Rasti::Form[from: #{from}, to: #{to}]> {\"from\":[\"invalid time range\"]}"
     end
 
