@@ -145,7 +145,7 @@ module Rasti
     end
 
     def assert_present(attribute)
-      assert attribute, !fetch(attribute).nil?, 'not present'
+      assert attribute, !fetch(attribute).nil?, 'not present' unless errors.key? attribute
     end
 
     def assert_not_present(attribute)

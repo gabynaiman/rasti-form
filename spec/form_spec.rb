@@ -173,6 +173,21 @@ describe Rasti::Form do
       error.message.must_equal 'Validation error: #<Rasti::Form[]> {"text":["not present"]}'
     end
 
+    it 'Required when cast failed' do
+      form = build_form do
+        attribute :number, Rasti::Form::Types::Integer
+
+        def validate
+          assert_present :number
+        end
+      end
+
+      proc { form.new number: 1 }.must_be_silent
+
+      error = proc { form.new number: 'text' }.must_raise Rasti::Form::ValidationError
+      error.message.must_equal "Validation error: #<Rasti::Form[]> {\"number\":[\"Invalid cast: 'text' -> Rasti::Form::Types::Integer\"]}"
+    end
+
     it 'Not required' do
       form = build_form do
         attribute :text, Rasti::Form::Types::String
