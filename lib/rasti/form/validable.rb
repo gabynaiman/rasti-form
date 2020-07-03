@@ -23,6 +23,13 @@ module Rasti
         false
       end
 
+      def assert_not_error(key)
+        yield
+        true
+      rescue => error
+        assert key, false, error.message
+      end
+
     end
   end
 end

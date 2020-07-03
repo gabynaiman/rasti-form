@@ -148,6 +148,10 @@ module Rasti
       assert attribute, !fetch(attribute).nil?, 'not present'
     end
 
+    def assert_not_present(attribute)
+      assert attribute, fetch(attribute).nil?, 'is present'
+    end
+
     def assert_not_empty(attribute)
       if assert_present attribute
         value = fetch attribute

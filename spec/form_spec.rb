@@ -141,6 +141,23 @@ describe Rasti::Form do
 
   describe 'Validations' do
 
+    it 'Not error' do
+      form = build_form do
+        attribute :text, Rasti::Form::Types::String
+
+        def validate
+          assert_not_error :text do
+            raise 'Invalid text' if text.nil?
+          end
+        end
+      end
+
+      proc { form.new text: 'text' }.must_be_silent
+
+      error = proc { form.new }.must_raise Rasti::Form::ValidationError
+      error.message.must_equal 'Validation error: #<Rasti::Form[]> {"text":["Invalid text"]}'
+    end
+
     it 'Required' do
       form = build_form do
         attribute :text, Rasti::Form::Types::String
@@ -150,8 +167,25 @@ describe Rasti::Form do
         end
       end
 
+      proc { form.new text: 'text' }.must_be_silent
+
       error = proc { form.new }.must_raise Rasti::Form::ValidationError
       error.message.must_equal 'Validation error: #<Rasti::Form[]> {"text":["not present"]}'
+    end
+
+    it 'Not required' do
+      form = build_form do
+        attribute :text, Rasti::Form::Types::String
+
+        def validate
+          assert_not_present :text
+        end
+      end
+
+      proc { form.new }.must_be_silent
+
+      error = proc { form.new text: 'text' }.must_raise Rasti::Form::ValidationError
+      error.message.must_equal 'Validation error: #<Rasti::Form[text: "text"]> {"text":["is present"]}'
     end
 
     it 'Not empty string' do
@@ -162,6 +196,8 @@ describe Rasti::Form do
           assert_not_empty :text
         end
       end
+
+      proc { form.new text: 'text' }.must_be_silent
 
       error = proc { form.new text: '  ' }.must_raise Rasti::Form::ValidationError
       error.message.must_equal 'Validation error: #<Rasti::Form[text: "  "]> {"text":["is empty"]}'
@@ -176,6 +212,8 @@ describe Rasti::Form do
         end
       end
 
+      proc { form.new array: ['text'] }.must_be_silent
+
       error = proc { form.new array: [] }.must_raise Rasti::Form::ValidationError
       error.message.must_equal 'Validation error: #<Rasti::Form[array: []]> {"array":["is empty"]}'
     end
@@ -188,6 +226,8 @@ describe Rasti::Form do
           assert_included_in :text, %w(value_1 value_2)
         end
       end
+
+      proc { form.new text: 'value_1' }.must_be_silent
 
       error = proc { form.new text: 'xyz' }.must_raise Rasti::Form::ValidationError
       error.message.must_equal 'Validation error: #<Rasti::Form[text: "xyz"]> {"text":["not included in \'value_1\', \'value_2\'"]}'
@@ -203,11 +243,13 @@ describe Rasti::Form do
         end
       end
 
-      from = Time.parse '2018-01-01 15:30:00'
-      to = Time.parse '2018-01-01 03:10:00'
+      from = Time.parse '2018-01-01 03:10:00'
+      to = Time.parse '2018-01-01 15:30:00'
 
-      error = proc { form.new from: from.to_s, to: to.to_s }.must_raise Rasti::Form::ValidationError
-      error.message.must_equal "Validation error: #<Rasti::Form[from: #{from}, to: #{to}]> {\"from\":[\"invalid time range\"]}"
+      proc { form.new from: from, to: to }.must_be_silent
+
+      error = proc { form.new from: to.to_s, to: from.to_s }.must_raise Rasti::Form::ValidationError
+      error.message.must_equal "Validation error: #<Rasti::Form[from: #{to}, to: #{from}]> {\"from\":[\"invalid time range\"]}"
     end
 
     it 'Nested form' do
@@ -219,6 +261,8 @@ describe Rasti::Form do
           assert_present 'range.max'
         end
       end
+
+      proc { form.new range: {min: 1, max: 2} }.must_be_silent
 
       error = proc { form.new }.must_raise Rasti::Form::ValidationError
       error.message.must_equal 'Validation error: #<Rasti::Form[]> {"range.min":["not present"],"range.max":["not present"]}'
@@ -236,7 +280,9 @@ describe Rasti::Form do
 
       form = build_form do
         attribute :range, Rasti::Form::Types::Form[range]
-      end 
+      end
+
+      proc { form.new range: {min: 1, max: 2} }.must_be_silent
 
       error = proc { form.new range: {min: 2, max: 1} }.must_raise Rasti::Form::ValidationError
       error.message.must_equal 'Validation error: #<Rasti::Form[]> {"range.min":["Min must be less than Max"]}'
