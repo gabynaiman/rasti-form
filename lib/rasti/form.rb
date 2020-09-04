@@ -18,11 +18,11 @@ module Rasti
           attributes.each do |name, type, options={}|
             attribute name, type, options
           end
-
-          def self.inherited(subclass)
-            subclass.instance_variable_set :@attributes, attributes.dup
-          end
         end
+      end
+
+      def inherited(subclass)
+        subclass.instance_variable_set :@attributes, attributes.dup
       end
 
       def attribute(name, type, options={})
