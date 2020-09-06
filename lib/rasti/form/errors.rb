@@ -53,7 +53,15 @@ module Rasti
       end
 
       def message
-        "Validation error: #{scope} #{JSON.dump(errors)}"
+        lines = ['Validation errors:']
+
+        errors.each do |key, value|
+          lines << "- #{key}: #{value}"
+        end
+
+        lines << scope.inspect
+
+        lines.join("\n")
       end
 
     end

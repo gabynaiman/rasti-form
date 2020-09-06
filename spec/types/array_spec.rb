@@ -46,7 +46,7 @@ describe Rasti::Form::Types::Array do
 
       error.errors.must_equal 'points.2.x' => ["Invalid cast: 'a' -> Rasti::Form::Types::Integer"], 
                               'points.3.y' => ["Invalid cast: 'b' -> Rasti::Form::Types::Integer"]
-      error.message.must_equal "Validation error: #<Rasti::Form[]> {\"points.2.x\":[\"Invalid cast: 'a' -> Rasti::Form::Types::Integer\"],\"points.3.y\":[\"Invalid cast: 'b' -> Rasti::Form::Types::Integer\"]}"
+      error.message.must_equal "Validation errors:\n- points.2.x: [\"Invalid cast: 'a' -> Rasti::Form::Types::Integer\"]\n- points.3.y: [\"Invalid cast: 'b' -> Rasti::Form::Types::Integer\"]\n#<Rasti::Form[]>"
     end
 
   end
