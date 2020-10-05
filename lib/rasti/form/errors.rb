@@ -59,8 +59,6 @@ module Rasti
           lines << "- #{key}: #{value}"
         end
 
-        lines << scope.inspect
-
         lines.join("\n")
       end
 

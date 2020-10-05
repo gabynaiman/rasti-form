@@ -35,7 +35,7 @@ describe Rasti::Form::Types::Form do
 
   it '{x: "text"} -> ValidationError' do
     error = proc { Rasti::Form::Types::Form[form].cast x: 'test' }.must_raise Rasti::Form::ValidationError
-    error.message.must_equal "Validation errors:\n- x: [\"Invalid cast: 'test' -> Rasti::Form::Types::Integer\"]\n#<Rasti::Form[]>"
+    error.message.must_equal "Validation errors:\n- x: [\"Invalid cast: 'test' -> Rasti::Form::Types::Integer\"]"
   end
 
 end
