@@ -1,11 +1,6 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'rasti/form/version'
-
 Gem::Specification.new do |spec|
   spec.name          = 'rasti-form'
-  spec.version       = Rasti::Form::VERSION
+  spec.version       = '3.1.2'
   spec.authors       = ['Gabriel Naiman']
   spec.email         = ['gabynaiman@gmail.com']
   spec.summary       = 'Forms validations and type casting'
@@ -19,6 +14,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_runtime_dependency 'multi_require', '~> 1.0'
+  spec.add_runtime_dependency 'rasti-model', '~> 1.0'
 
   spec.add_development_dependency 'rake', '~> 12.0'
   spec.add_development_dependency 'minitest', '~> 5.0', '< 5.11'

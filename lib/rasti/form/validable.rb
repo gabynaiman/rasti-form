@@ -17,10 +17,12 @@ module Rasti
       end
 
       def assert(key, condition, message)
-        return true if condition
-        
-        errors[key] << message
-        false
+        if condition
+          true
+        else
+          errors[key] << message
+          false
+        end
       end
 
       def assert_not_error(key)
