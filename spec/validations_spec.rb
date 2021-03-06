@@ -85,6 +85,22 @@ describe Rasti::Form, 'Validations' do
       end
     end
 
+    it 'With default' do
+      form = build_form do
+        attribute :number, T::Integer, default: 1
+
+        def validate
+          assert_present :number
+        end
+      end
+
+      proc { form.new }.must_be_silent
+
+      assert_validation_error(number: ['not present']) do
+        form.new number: nil
+      end
+    end
+
   end
 
   it 'Not present' do

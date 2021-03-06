@@ -31,14 +31,24 @@ module Rasti
       validate!
     end
 
+    def attributes(*args)
+      warn '[Deprecated] Rasti::Form#attributes will be removed next major version (v4.0.0)'
+      warn caller_locations(1,1)[0].to_s
+      to_h(*args)
+    end
+
     private
 
     def assert_present(attr_name)
-      assert attr_name, assigned?(attr_name) && !public_send(attr_name).nil?, 'not present' unless errors.key? attr_name
+      assert attr_name, !public_send(attr_name).nil?, 'not present' unless errors.key? attr_name
+    rescue NotAssignedAttributeError
+      assert attr_name, false, 'not present'
     end
 
     def assert_not_present(attr_name)
-      assert attr_name, !assigned?(attr_name) || public_send(attr_name).nil?, 'is present'
+      assert attr_name, public_send(attr_name).nil?, 'is present'
+    rescue NotAssignedAttributeError
+      true
     end
 
     def assert_not_empty(attr_name)
