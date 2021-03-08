@@ -37,7 +37,7 @@ module Rasti
     end
 
     def assigned?(attr_name)
-      assigned_attribute? attr_name
+      assigned_attribute? attr_name.to_sym
     end
 
     private
