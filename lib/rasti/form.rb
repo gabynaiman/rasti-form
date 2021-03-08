@@ -37,6 +37,10 @@ module Rasti
       to_h(*args)
     end
 
+    def assigned?(attr_name)
+      assigned_attribute? attr_name
+    end
+
     private
 
     def assert_present(attr_name)
