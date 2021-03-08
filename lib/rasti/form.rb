@@ -31,11 +31,6 @@ module Rasti
       validate!
     end
 
-    def attributes(*args)
-      warn "[Deprecated] Rasti::Form#attributes will be removed next major version (v4.0.0)\n#{caller_locations(1,1)[0].to_s}"
-      to_h(*args)
-    end
-
     def assigned?(attr_name)
       assigned_attribute? attr_name.to_sym
     end
