@@ -39,39 +39,29 @@ module Rasti
 
     def assert_present(attr_name)
       if !errors.key?(attr_name)
-        assert attr_name, 'not present' do
-          !public_send(attr_name).nil?
-        end
+        assert attr_name, assigned?(attr_name) && !public_send(attr_name).nil?, 'not present'
       end
     end
 
     def assert_not_present(attr_name)
-      assert attr_name, 'is present' do
-        !assigned?(attr_name) || public_send(attr_name).nil?
-      end
+      assert attr_name, !assigned?(attr_name) || public_send(attr_name).nil?, 'is present'
     end
 
     def assert_not_empty(attr_name)
       if assert_present attr_name
-        assert attr_name, 'is empty' do
-          value = public_send attr_name
-          value.is_a?(String) ? !value.strip.empty? : !value.empty?
-        end
+        value = public_send attr_name
+        assert attr_name, value.is_a?(String) ? !value.strip.empty? : !value.empty?, 'is empty'
       end
     end
 
     def assert_included_in(attr_name, set)
       if assert_present attr_name
-        assert attr_name, "not included in #{set.map(&:inspect).join(', ')}" do
-          set.include? public_send(attr_name)
-        end
+        assert attr_name, set.include?(public_send(attr_name)), "not included in #{set.map(&:inspect).join(', ')}"
       end
     end
 
     def assert_range(attr_name_from, attr_name_to)
-      assert attr_name_from, 'invalid range' do
-        public_send(attr_name_from) <= public_send(attr_name_to)
-      end
+      assert attr_name_from, public_send(attr_name_from) <= public_send(attr_name_to), 'invalid range'
     end
 
   end
