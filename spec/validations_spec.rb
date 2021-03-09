@@ -85,6 +85,29 @@ describe Rasti::Form, 'Validations' do
       end
     end
 
+    it 'Invalid nested cast' do
+      range = build_form do
+        attribute :min, T::Integer
+        attribute :max, T::Integer
+
+        def validate
+          assert_range :min, :max
+        end
+      end
+
+      form = build_form do
+        attribute :range, T::Model[range]
+
+        def validate
+          assert_present :range
+        end
+      end
+
+      assert_validation_error('range.max' => ['not present'], range: ['not present']) do
+        form.new range: {min: 1}
+      end
+    end
+
     it 'With default' do
       form = build_form do
         attribute :number, T::Integer, default: 1
@@ -103,22 +126,47 @@ describe Rasti::Form, 'Validations' do
 
   end
 
-  it 'Not present' do
-    form = build_form do
-      attribute :text, T::String
+  describe 'Not present' do
 
-      def validate
-        assert_not_present :text
+    let :form do
+      range = build_form do
+        attribute :min, T::Integer
+        attribute :max, T::Integer
+
+        def validate
+          assert_range :min, :max
+        end
+      end
+
+      build_form do
+        attribute :range, T::Model[range]
+
+        def validate
+          assert_not_present :range
+        end
       end
     end
 
-    proc { form.new }.must_be_silent
-
-    proc { form.new text: nil }.must_be_silent
-
-    assert_validation_error(text: ['is present']) do
-      form.new text: 'text'
+    it 'Success not assigned' do
+      proc { form.new }.must_be_silent
     end
+
+    it 'Success with nil' do
+      proc { form.new range: nil }.must_be_silent
+    end
+
+    it 'Assigned' do
+      assert_validation_error(range: ['is present']) do
+        form.new range: {min: 1, max: 2}
+      end
+    end
+
+    it 'Invalid nested cast' do
+      assert_validation_error('range.max' => ['not present'], range: ['is present']) do
+        form.new range: {min: 1}
+      end
+    end
+
   end
 
   describe 'Not empty' do

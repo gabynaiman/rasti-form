@@ -41,10 +41,14 @@ module Rasti
       if !errors.key?(attr_name)
         assert attr_name, assigned?(attr_name) && !public_send(attr_name).nil?, 'not present'
       end
+    rescue Types::Error
+      assert attr_name, false, 'not present'
     end
 
     def assert_not_present(attr_name)
       assert attr_name, !assigned?(attr_name) || public_send(attr_name).nil?, 'is present'
+    rescue Types::Error
+      assert attr_name, false, 'is present'
     end
 
     def assert_not_empty(attr_name)
@@ -61,7 +65,9 @@ module Rasti
     end
 
     def assert_range(attr_name_from, attr_name_to)
-      assert attr_name_from, public_send(attr_name_from) <= public_send(attr_name_to), 'invalid range'
+      if assert_present(attr_name_from) && assert_present(attr_name_to)
+        assert attr_name_from, public_send(attr_name_from) <= public_send(attr_name_to), 'invalid range'
+      end
     end
 
   end
