@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'rasti-form'
-  spec.version       = '3.1.2'
+  spec.version       = '4.0.0'
   spec.authors       = ['Gabriel Naiman']
   spec.email         = ['gabynaiman@gmail.com']
   spec.summary       = 'Forms validations and type casting'
