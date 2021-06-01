@@ -5,7 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/gabynaiman/rasti-form/badge.svg?branch=master)](https://coveralls.io/github/gabynaiman/rasti-form?branch=master)
 [![Code Climate](https://codeclimate.com/github/gabynaiman/rasti-form.svg)](https://codeclimate.com/github/gabynaiman/rasti-form)
 
-Forms validations and type casting
+Forms validations
 
 ## Installation
 
@@ -25,37 +25,18 @@ Or install it yourself as:
 
 ## Usage
 
-```ruby
-T = Rasti::Form::Types
-```
-
-### Type casting
-
-```ruby
-T::Integer.cast '10'   # => 10
-T::Integer.cast '10.5' # => 10
-T::Integer.cast 'text' # => Rasti::Types::CastError: Invalid cast: 'text' -> Rasti::Types::Integer
-
-T::Boolean.cast 'true'  # => true
-T::Boolean.cast 'FALSE' # => false
-T::Boolean.cast 'text'  # => Rasti::Types::CastError: Invalid cast: 'text' -> Rasti::Types::Boolean
-
-T::Time['%Y-%m-%d'].cast '2016-10-22' # => 2016-10-22 00:00:00 -0300
-T::Time['%Y-%m-%d'].cast '2016-10'    # => Rasti::Types::CastError: Invalid cast: '2016-10' -> Rasti::Types::Time['%Y-%m-%d']
-
-T::Array[T::Symbol].cast [1, 'test', :sym] # => [:"1", :test, :sym]
-```
-
 ### Form type coercion
 
 ```ruby
+T = Rasti::Types
+
 PointForm = Rasti::Form[x: T::Integer, y: T::Integer] # => PointForm[:x, :y]
 form = PointForm.new x: '1', y: 2 # => #<PointForm[x: 1, y: 2]>
 form.x # => 1
 form.y # => 2
-form.attributes # => {x: 1, y: 2}
+form.to_h # => {x: 1, y: 2}
 
-PointForm.new x: true # => Validation error: {"x":["Invalid cast: true -> Rasti::Form::Types::Integer"]}
+PointForm.new x: true # => Validation error: {"x":["Invalid cast: true -> Rasti::Types::Integer"]}
 ```
 
 ### Form validations
@@ -82,42 +63,6 @@ DateRangeForm.new from: '20/10/2016', to: '08/10/2016' # => Validation error: {"
 form = DateRangeForm.new from: '20/10/2016', to: '28/10/2016'
 form.from # => 2016-10-20 00:00:00 -0300
 form.to   # => 2016-10-28 00:00:00 -0300
-```
-
-### Built-in types
-
-- Array
-- Boolean
-- Enum
-- Float
-- Form
-- Hash
-- Integer
-- IO
-- Regexp
-- String
-- Symbol
-- Time
-- UUID
-
-### Plugable types
-
-```ruby
-class CustomType
-  class << self
-    extend Castable
-
-    private
-
-    def valid?(value)
-      valid.is_a?(String)
-    end
-
-    def transform(value)
-      value.upcase
-    end
-  end
-end
 ```
 
 ## Contributing
