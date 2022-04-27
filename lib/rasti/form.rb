@@ -10,24 +10,12 @@ module Rasti
 
     include Validable
 
+    alias_method :__initialize__, :initialize
+    private :__initialize__
+
     def initialize(attributes={})
-      begin
-        super attributes
-
-        cast_attributes!
-
-      rescue Rasti::Model::UnexpectedAttributesError => ex
-        ex.attributes.each do |attr_name|
-          errors[attr_name] << 'unexpected attribute'
-        end
-
-      rescue Rasti::Types::CompoundError => ex
-        ex.errors.each do |key, messages|
-          errors[key] += messages
-        end
-
-      end
-
+      assign_attributes! attributes
+      validate_type_casting!
       validate!
     end
 
@@ -37,18 +25,38 @@ module Rasti
 
     private
 
+    def assign_attributes!(attributes)
+      __initialize__ attributes
+
+    rescue Rasti::Model::UnexpectedAttributesError => ex
+      ex.attributes.each do |attr_name|
+        errors[attr_name] << 'unexpected attribute'
+      end
+
+    ensure
+      raise_if_errors!
+    end
+
+    def validate_type_casting!
+      cast_attributes!
+
+    rescue Rasti::Types::CompoundError => ex
+      ex.errors.each do |key, messages|
+        errors[key] += messages
+      end
+
+    ensure
+      raise_if_errors!
+    end
+
     def assert_present(attr_name)
       if !errors.key?(attr_name)
         assert attr_name, assigned?(attr_name) && !public_send(attr_name).nil?, 'not present'
       end
-    rescue Types::Error
-      assert attr_name, false, 'not present'
     end
 
     def assert_not_present(attr_name)
       assert attr_name, !assigned?(attr_name) || public_send(attr_name).nil?, 'is present'
-    rescue Types::Error
-      assert attr_name, false, 'is present'
     end
 
     def assert_not_empty(attr_name)

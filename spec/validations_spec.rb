@@ -103,7 +103,7 @@ describe Rasti::Form, 'Validations' do
         end
       end
 
-      assert_validation_error('range.max' => ['not present'], range: ['not present']) do
+      assert_validation_error('range.max' => ['not present']) do
         form.new range: {min: 1}
       end
     end
@@ -162,7 +162,7 @@ describe Rasti::Form, 'Validations' do
     end
 
     it 'Invalid nested cast' do
-      assert_validation_error('range.max' => ['not present'], range: ['is present']) do
+      assert_validation_error('range.max' => ['not present']) do
         form.new range: {min: 1}
       end
     end

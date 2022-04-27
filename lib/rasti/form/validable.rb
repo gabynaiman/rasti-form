@@ -10,10 +10,14 @@ module Rasti
 
       def validate!
         validate
-        raise ValidationError.new(self, errors) unless errors.empty?
+        raise_if_errors!
       end
 
       def validate
+      end
+
+      def raise_if_errors!
+        raise ValidationError.new(self, errors) unless errors.empty?
       end
 
       def assert(key, condition, message)
