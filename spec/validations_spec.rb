@@ -298,4 +298,18 @@ describe Rasti::Form, 'Validations' do
     end
   end
 
+  it 'Invalid cast must be raise as ValidationError' do
+    form = build_form do
+      attribute :id, T::UUID
+
+      def validate
+        id
+      end
+    end
+
+    assert_validation_error(id: ["Invalid cast: '123' -> Rasti::Types::UUID"]) do
+      form.new id: '123'
+    end
+  end
+
 end
