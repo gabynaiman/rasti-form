@@ -1,7 +1,7 @@
 # Rasti::Form
 
 [![Gem Version](https://badge.fury.io/rb/rasti-form.svg)](https://rubygems.org/gems/rasti-form)
-[![Build Status](https://travis-ci.org/gabynaiman/rasti-form.svg?branch=master)](https://travis-ci.org/gabynaiman/rasti-form)
+[![CI](https://github.com/gabynaiman/rasti-form/actions/workflows/ci.yml/badge.svg)](https://github.com/gabynaiman/rasti-form/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/gabynaiman/rasti-form/badge.svg?branch=master)](https://coveralls.io/github/gabynaiman/rasti-form?branch=master)
 [![Code Climate](https://codeclimate.com/github/gabynaiman/rasti-form.svg)](https://codeclimate.com/github/gabynaiman/rasti-form)
 
