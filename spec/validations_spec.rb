@@ -298,18 +298,36 @@ describe Rasti::Form, 'Validations' do
     end
   end
 
-  it 'Invalid cast must be raise as ValidationError' do
-    form = build_form do
-      attribute :id, T::UUID
+  describe 'Validations Precedence' do
 
-      def validate
-        id
+    let(:form) do
+      build_form do
+        attribute :limit, T::Integer
+
+        def validate
+          assert :limit, limit < 10, 'invalid limit'
+        end
       end
     end
 
-    assert_validation_error(id: ["Invalid cast: '123' -> Rasti::Types::UUID"]) do
-      form.new id: '123'
+    it '1) Validate unexpected attributes' do
+      assert_validation_error(id: ["unexpected attribute"]) do
+        form.new id: '123'
+      end
     end
+
+    it '2) Validate attributes casting' do
+      assert_validation_error(limit: ["Invalid cast: 'pepe' -> Rasti::Types::Integer"]) do
+        form.new limit: 'pepe'
+      end
+    end
+
+    it '3) Run custom validations' do
+      assert_validation_error(limit: ["invalid limit"]) do
+        form.new limit: 500
+      end
+    end
+
   end
 
 end
