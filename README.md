@@ -36,7 +36,8 @@ form.x # => 1
 form.y # => 2
 form.to_h # => {x: 1, y: 2}
 
-PointForm.new x: true # => Validation error: {"x":["Invalid cast: true -> Rasti::Types::Integer"]}
+PointForm.new x: true # => Validation errors:
+                      #    - x: ["Invalid cast: true -> Rasti::Types::Integer"]
 ```
 
 ### Form validations
@@ -51,14 +52,23 @@ class DateRangeForm < Rasti::Form
   private
 
   def validate
-    assert_present :from
+    if assert_present :from
+      assert :from, from > Time.parse('2000-01-01'), 'From must be greater than 01/01/2000'
+    end
     assert_present :to
-    assert :from, from <= to, 'From must be less than To' if from && to
+    assert :from, from <= to, 'From must be less than To' if assigned?(:from) && assigned?(:to)
   end
 end
 
-DateRangeForm.new # => Validation error: {"from":["not present"],"to":["not present"]}
-DateRangeForm.new from: '20/10/2016', to: '08/10/2016' # => Validation error: {"from":["From must be less than To"]}
+DateRangeForm.new # => Validation errors:
+                  #    - from: ["not present"]
+                  #    - to: ["not present"]
+
+DateRangeForm.new from: '15/07/1999', to: '08/10/2016' # => Validation errors: 
+                                                       #    - from: ["From must be greater than 01/01/2000"]
+
+DateRangeForm.new from: '20/10/2016', to: '08/10/2016' # => Validation errors: 
+                                                       #    - from: ["From must be less than To"]
 
 form = DateRangeForm.new from: '20/10/2016', to: '28/10/2016'
 form.from # => 2016-10-20 00:00:00 -0300
